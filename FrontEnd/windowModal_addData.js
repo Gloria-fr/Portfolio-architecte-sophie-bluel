@@ -9,8 +9,8 @@ function showAdd() {
 }
 
 function showPreview(file) {
-  const preview    = document.getElementById('preview');
-  const uploadarea = document.getElementById('upload-area');
+  const preview    = document.querySelector('.preview');
+  const uploadarea = document.querySelector('.upload-area');
   if (!(preview instanceof HTMLImageElement)) {
     alert('预览区域不存在：请添加 <img id="preview">');
     return;
@@ -53,9 +53,9 @@ function showMsg(text){
 }
 
 function clearPreview() {
-  const preview    = document.getElementById('preview');
-  const uploadarea = document.getElementById('upload-area');
-  const fileIn     = document.getElementById('file');
+  const preview    = document.querySelector('.preview');
+  const uploadarea = document.querySelector('.upload-area');
+  const fileIn     = document.querySelector('.file');
 
   // 隐藏预览、显示上传区、清掉 src
   if (preview) {
@@ -71,17 +71,17 @@ function clearPreview() {
 // =================== DOM 与常量 ===================
 const dlg         = document.querySelector('#edit-bar dialog');
 const viewGallery = document.getElementById('view-gallery');
-const viewAdd     = document.getElementById('view-add');
+const viewAdd     = document.querySelector('.viewadd');
 
 // 分类与下拉
 const categories  = JSON.parse(sessionStorage.getItem('categories') || '[]');
 const select      = document.getElementById('category');
 
 // 文件与预览
-const btnAdd      = document.getElementById('btn-addphoto');
-const fileIn      = document.getElementById('file');
-const preview     = document.getElementById('preview');
-const uploadarea  = document.getElementById('upload-area');
+const btnAdd      = document.querySelector('.btn-addphoto');
+const fileIn      = document.querySelector('.file');
+const preview     = document.querySelector('.preview');
+const uploadarea  = document.querySelector('.upload-area');
 
 // 表单与按钮
 const form        = document.getElementById('add-form');
@@ -96,7 +96,7 @@ const submitBtn   = form.querySelector('.btn-primary');
 document.addEventListener('DOMContentLoaded', () => {
   // 关闭与返回：回到相册
   document.addEventListener('click', (e) => {
-  if (e.target.closest('#back-modal, #back')) {
+  if (e.target.closest('.back-modal')) {
     e.preventDefault();
     showGallery();
     clearPreview();
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
  document.addEventListener('click', (e) => {
-  if (!e.target.closest('#close-modal')) return;
+  if (!e.target.closest('.close-modal')) return;
   e.preventDefault();
   if (dlg?.open && typeof dlg.close === 'function') dlg.close();
   showGallery();
@@ -121,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
       showPreview(f);
     } else {
       //  不是图片：清空预览，显示上传区并提示
-      const preview    = document.getElementById('preview');
-      const uploadarea = document.getElementById('upload-area');
+      const preview    = document.querySelector('.preview');
+      const uploadarea = document.querySelector('.upload-area');
       preview?.removeAttribute('src');
       preview?.classList?.add('hidden');
       uploadarea?.classList?.remove('hidden');

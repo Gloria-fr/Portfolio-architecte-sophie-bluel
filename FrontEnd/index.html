@@ -21,38 +21,38 @@
 <body>
 	<!-- Barre d’édition noire — visible uniquement si isAdmin = true (sinon hidden) -->
 	<div id="edit-bar" class="editbar">
-		<button id="btn-modifier" class="btn-dark"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+		<button class="btn-modifier"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
 			Modifier</button>
 		<dialog id="dialog">
 			<!-- 视图1：相册 -->
-			<section id="view-gallery" class="viewgallery">
-				<button id="close-modal" class="btn-close"><i class="bi bi-x-lg"></i></button>
+			<section class="viewgallery">
+				<button class="close-modal"><i class="bi bi-x-lg"></i></button>
 				<p>Galerie photo</p> 
 				<div id="gallery"></div>
 				<hr>
-				<button id="btn-ajouter" class="btnajouter">Ajouter une photo</button>
+				<button class="btn-ajouter">Ajouter une photo</button>
 			</section>
 
 			<!-- 视图2：添加照片 -->
-			<section id="view-add" class="viewadd hidden">
-				<button id="back-modal" class="btn-back" type="button" aria-label="Retour">
+			<section class="viewadd hidden">
+				<button class="back-modal" type="button" aria-label="Retour">
 					<i class="bi bi-arrow-left"></i>
 				</button>
-				<button id="close-modal" class="btn-close" type="button" aria-label="Fermer">
+				<button class="close-modal" type="button" aria-label="Fermer">
 					<i class="bi bi-x-lg"></i>
 				</button>
 				<p>Ajout photo</p>
 				<form id="add-form" class="uploader">
 					<!-- 拖拽/点击区域 -->
-					<div id="draggable">
-						<div id="upload-area" class="uploadarea">
+					<div class="draggable">
+						<div class="upload-area">
 							<i class="fa-regular fa-image" aria-hidden="true"></i>
-							<button id="btn-addphoto" class="btnaddphoto" type="button">+ Ajouter photo</button>
+							<button class="btn-addphoto" type="button">+ Ajouter photo</button>
 							<!-- 隐藏的文件输入（只选图片；想直接打开相机可看下面“可选增强”） -->
-                            <input id="file" class="fileload hidden" type="file" accept="image/*">
+                            <input  class="file hidden" type="file" accept="image/*">
 							<small>jpg, png : 4&nbsp;Mo max</small>
 							<!-- 选择后的预览 -->
-						    <img id="preview" class="hidden" alt="Aperçu" />
+						    <img class="preview hidden" alt="Aperçu" />
 						</div>
 					</div>
 

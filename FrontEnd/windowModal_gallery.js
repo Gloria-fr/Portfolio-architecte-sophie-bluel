@@ -55,8 +55,8 @@ renderGallery(works, gallery); // 渲染到模态
 
 // 视图元素
 const dlg         = document.querySelector('#edit-bar dialog');
-const viewGallery = document.getElementById('view-gallery');
-const viewAdd     = document.getElementById('view-add');
+const viewGallery = document.querySelector('.viewgallery');
+const viewAdd     = document.querySelector('.viewadd');
 
 // 切页：只做显示/隐藏
 function showGallery() {
@@ -69,8 +69,8 @@ function showAdd() {
 }
 
 // 打开/关闭/切换（确保元素存在再绑定）
-const btnClose  = document.getElementById('close-modal');
-const btnAddDlg = document.getElementById('btn-ajouter');
+const btnClose  = document.querySelector('.close-modal');
+const btnAddDlg = document.querySelector('.btn-ajouter');
 
 btnClose?.addEventListener('click', () => {
   if (dlg?.open && typeof dlg.close === 'function') dlg.close();
