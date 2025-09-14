@@ -1,46 +1,62 @@
-// =================== Galerie modale (整理版) ===================
-// 存储与数据
+// ===================================================================
+// 1) Configuration / État
+// ===================================================================
 const storage = sessionStorage;
-let works = JSON.parse(storage.getItem('works') || '[]');
-if (!Array.isArray(works) || works.length === 0) {
-  const res = await fetch('http://localhost:5678/api/works');
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  works = await res.json();
-  storage.setItem('works', JSON.stringify(works));
-}
-console.log('indexgqlleryWorks:', works);
+const token   = sessionStorage.getItem('token');
+const hasToken =
+  typeof token === 'string' &&
+  token.trim() !== '' &&
+  token !== 'null' &&
+  token !== 'undefined';
 
-const mainGallery = document.querySelector('#portfolio .gallery');
+// ===================================================================
+// 2) Logique DOM (à exécuter quand le DOM est prêt)
+// ===================================================================
+if (hasToken) {
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1) Afficher la barre d’édition uniquement s’il existe un token
+    const bar     = document.getElementById('edit-bar');                 // barre noire fixe
+    const filters = document.getElementById('btnfilters');               // groupe de filtres
+    const editBtn = document.querySelector('.section-edit #btn-modifier'); // bouton "modifier"
+    const isAdmin = hasToken;                                            // réutiliser l’état calculé
 
-// 渲染相册
-function renderGallery(list, container) {
-  if (!container || !Array.isArray(list)) return;
-
-  const frag = document.createDocumentFragment();
-  for (const w of list) {
-    const fig = document.createElement('figure');
-    fig.dataset.id = w.id;
-
-    if (w.category?.id) {
-      fig.dataset.categoryId = w.category.id;
-      fig.dataset.categoryName = w.category.name;
-    } else if (w.categoryId) {
-      fig.dataset.categoryId = w.categoryId;
+    if (!bar || !filters || !editBtn) {
+      console.warn('Éléments requis introuvables (bar/filters/editBtn)');
+      return;
     }
 
-    const img = document.createElement('img');
-    img.src = w.imageUrl;
-    img.alt = w.title || '';
-    img.loading = 'lazy';
+    bar.hidden = !isAdmin;
 
-    const cap = document.createElement('figcaption');
-    cap.textContent = w.title || '';
+    if (isAdmin) {
+      bar.classList.add('is-active');
+      filters.classList.add('hidden');
+      editBtn.classList.remove('hidden');
+    } else {
+      bar.classList.remove('is-active');
+      filters.classList.remove('hidden');
+      editBtn.classList.add('hidden');
+      return;
+    }
 
-    // 如需模态里带删除按钮，可在外层决定是否追加
-    fig.append(img, cap);
-    frag.append(fig);
-  }
-  container.replaceChildren(frag);
+    // 2) Rechercher les éléments ici pour garantir qu’ils sont rendus
+    const dlg      = document.querySelector('#edit-bar dialog'); // élément <dialog> dans la barre
+    const closeBtn = document.getElementById('close-modal');     // bouton de fermeture (croix)
+
+    if (!dlg) {
+      console.warn('Élément <dialog> introuvable');
+      return;
+    }
+
+    // 3) Ouvrir la modale
+    editBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      dlg.showModal(); // ouvrir la boîte modale
+    });
+
+    // 4) Fermer la modale (bouton croix)
+    if (closeBtn) closeBtn.addEventListener('click', () => dlg.close());
+
+    // 5) Fermer en cliquant sur l’arrière-plan (backdrop) — à implémenter si nécessaire
+    // dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  }, { once: true });
 }
-
-renderGallery(works, mainGallery);  // 渲染到主页

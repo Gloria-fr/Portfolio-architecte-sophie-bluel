@@ -17,12 +17,12 @@ const hasToken =
   bar.hidden = !isAdmin;
   
    if (isAdmin) {
-    bar.classList.add('is-active');  // ← 强制添加
+    bar.classList.add('is-active');  
     filters.classList.add('hidden');
     editBtn.classList.remove('hidden');
 
   } else {
-    bar.classList.remove('is-active'); // ← 强制移除
+    bar.classList.remove('is-active'); 
     filters.classList.remove('hidden');
     editBtn.classList.add('hidden');
     return;

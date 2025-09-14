@@ -24,7 +24,7 @@
 		<button class="btn-modifier"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
 			Modifier</button>
 		<dialog id="dialog">
-			<!-- 视图1：相册 -->
+			<!-- Vue 1 : Galerie -->
 			<section class="viewgallery">
 				<button class="close-modal"><i class="bi bi-x-lg"></i></button>
 				<p>Galerie photo</p> 
@@ -33,7 +33,7 @@
 				<button class="btn-ajouter">Ajouter une photo</button>
 			</section>
 
-			<!-- 视图2：添加照片 -->
+			<!-- Vue 2 : Ajout de photo -->
 			<section class="viewadd hidden">
 				<button class="back-modal" type="button" aria-label="Retour">
 					<i class="bi bi-arrow-left"></i>
@@ -43,15 +43,14 @@
 				</button>
 				<p>Ajout photo</p>
 				<form id="add-form" class="uploader">
-					<!-- 拖拽/点击区域 -->
 					<div class="draggable">
 						<div class="upload-area">
 							<i class="fa-regular fa-image" aria-hidden="true"></i>
 							<button class="btn-addphoto" type="button">+ Ajouter photo</button>
-							<!-- 隐藏的文件输入（只选图片；想直接打开相机可看下面“可选增强”） -->
+							<!-- Champ de fichier masqué -->
                             <input  class="file hidden" type="file" accept="image/*">
 							<small>jpg, png : 4&nbsp;Mo max</small>
-							<!-- 选择后的预览 -->
+							<!-- Aperçu après sélection -->
 						    <img class="preview hidden" alt="Aperçu" />
 						</div>
 					</div>
