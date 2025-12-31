@@ -8,7 +8,7 @@ const works   = JSON.parse(storage.getItem('works') || '[]');
 let gallery;       // #edit-bar #gallery (galerie dans la modale)
 let mainGallery;   // #portfolio .gallery (galerie principale)
 let dlg, viewGallery, viewAdd;
-let btnClose, btnAddDlg;
+let btnClose, btnAddDlg, btnModifier;
 
 
 // =================== 2) Fonctions (noms et logique conservés) ===================
@@ -71,6 +71,7 @@ function init() {
   mainGallery  = document.querySelector('#portfolio .gallery');
 
   dlg          = document.querySelector('#edit-bar dialog');
+  btnModifier = document.getElementById('btn-modifier');
   viewGallery  = document.querySelector('.viewgallery');
   viewAdd      = document.querySelector('.viewadd');
 
@@ -80,7 +81,17 @@ function init() {
   // -- Rendu initial de la galerie modale --
   renderGallery(works, gallery);
 
-  // -- Ouverture / fermeture / navigation entre vues --
+  // -- Ouverture 
+  if (btnModifier) {
+    btnModifier.addEventListener('click', (e) => {
+        e.preventDefault();
+        showGallery(); 
+        if (typeof dlg.showModal === 'function') {
+            dlg.showModal(); 
+        }
+    });
+}
+  // / fermeture / navigation entre vues --
   btnClose?.addEventListener('click', () => {
     if (dlg?.open && typeof dlg.close === 'function') dlg.close();
   });
@@ -89,6 +100,28 @@ function init() {
     showAdd();
     if (typeof dlg?.showModal === 'function') dlg.showModal();
   });
+
+  // --- Fermer la modale en cliquant à l’extérieur (backdrop) ---
+dlg?.addEventListener('click', (e) => {
+  const inside =
+    (viewGallery && viewGallery.contains(e.target)) ||
+    (viewAdd && viewAdd.contains(e.target));
+
+  if (!inside) {
+    e.preventDefault();       
+    if (dlg.open && typeof dlg.close === 'function') dlg.close();
+    showGallery();            
+  }
+});
+
+// --- Fermer avec la touche Échap (ESC) ---
+dlg?.addEventListener('cancel', (e) => {
+  e.preventDefault();        
+  if (dlg.open && typeof dlg.close === 'function') dlg.close();
+  showGallery();
+});
+
+
 
   // -- Suppression d’un élément (délégation sur la galerie modale) --
   if (gallery) {
@@ -142,6 +175,7 @@ function init() {
 
 // Lancer une fois le DOM prêt (liaisons uniques)
 document.addEventListener('DOMContentLoaded', init, { once: true });
+
 
 
 

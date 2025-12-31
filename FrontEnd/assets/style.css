@@ -84,13 +84,18 @@ h1{
 	color: #B1663C
 }
 
-h1 > span {
-	font-family: 'Work Sans';
-	font-size:10px;
-	letter-spacing: 0.1em;
-;
-}
 
+h1 > a.logo-link {
+  text-decoration: none; 
+  color: inherit;        
+  display: flex;
+  flex-direction: column; 
+}
+h1 > a.logo-link > span {
+  font-family: 'Work Sans';
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
 h2{
 	font-family: 'Syne';
 	font-weight: 700;
@@ -417,7 +422,7 @@ footer nav ul {
   left: 50%;
   top: 80px;
   transform: translateX(-50%);
-  margin: 0; /* annule les marges UA */
+  margin-bottom: 10px; /* annule les marges UA */
 }
 
 /* Voile de fond de la modale */

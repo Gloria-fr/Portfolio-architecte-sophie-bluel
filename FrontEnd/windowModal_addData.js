@@ -4,7 +4,7 @@
 const storage     = sessionStorage;                                      // Cache de session
 const categories  = JSON.parse(sessionStorage.getItem('categories') || '[]'); // Catégories en cache
 
-// Références DOM (déclarées ici, initialisées dans init())
+// Références DOM (déclarées ici, initialisées dans init()) 
 let dlg, viewGallery, viewAdd, select, btnAdd, fileIn, preview, uploadarea, form, title, submitBtn;
 
 
@@ -220,6 +220,7 @@ function init() {
 
 // Lancer une fois le DOM prêt (évite les sélecteurs null)
 document.addEventListener('DOMContentLoaded', init, { once: true });
+
 
 
 
