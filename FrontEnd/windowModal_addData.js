@@ -5,7 +5,7 @@ const storage     = sessionStorage;                                      // Cach
 const categories  = JSON.parse(sessionStorage.getItem('categories') || '[]'); // Catégories en cache
 
 // Références DOM (déclarées ici, initialisées dans init()) 
-let dlg, viewGallery, viewAdd, select, btnAdd, fileIn, preview, uploadarea, form, title, submitBtn;
+let dlg, viewGallery, viewAdd, select, btnAdd, fileIn, preview, uploadarea, form, title, submitBtn, gallery;
 
 
 // ===================================================================
@@ -13,6 +13,67 @@ let dlg, viewGallery, viewAdd, select, btnAdd, fileIn, preview, uploadarea, form
 // ===================================================================
 
 // Basculer vers la vue Galerie
+function renderGallery(list) {
+  const gallery = document.querySelector(".gallery");              // Conteneur de la galerie
+  gallery.innerHTML = "";                                          // Vider la galerie avant nouveau rendu
+
+  for (let i = 0; i < list.length; i++) {
+    const work = list[i];                                          // Œuvre courante
+
+    const figure = document.createElement("figure");               // Carte (figure)
+    const img = document.createElement("img");                     // Image
+    img.src = work.imageUrl;                                       // URL de l’image
+    img.alt = work.title;                                          // Texte alternatif
+
+    const caption = document.createElement("figcaption");          // Légende (titre de l’œuvre)
+    caption.textContent = work.title;
+
+    figure.appendChild(img);                                       // Image → figure
+    figure.appendChild(caption);                                   // Légende → figure
+    gallery.appendChild(figure);                                   // Figure → galerie
+  }
+}
+
+function renderGalleryModale(list, container) {
+  if (!container || !Array.isArray(list)) return;
+
+  const frag = document.createDocumentFragment();
+  for (const w of list) {
+    const fig = document.createElement('figure');
+    fig.dataset.id = w.id;
+
+    if (w.category?.id) {
+      fig.dataset.categoryId = w.category.id;
+      fig.dataset.categoryName = w.category.name;
+    } else if (w.categoryId) {
+      fig.dataset.categoryId = w.categoryId;
+    }
+
+    const img = document.createElement('img');
+    img.src = w.imageUrl;
+    img.alt = w.title || '';
+    img.loading = 'lazy';
+
+    const cap = document.createElement('figcaption');
+    cap.textContent = w.title || '';
+
+    const del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'del';
+    del.setAttribute('aria-label', 'Supprimer');
+
+    const icon = document.createElement('i');          // Icône de suppression
+    icon.className = 'bi bi-trash3';
+
+    del.appendChild(icon);
+    fig.append(img, cap, del);
+    frag.append(fig);
+  }
+  container.replaceChildren(frag);
+}
+
+
+
 function showGallery() {
   viewAdd.classList.add('hidden'); 
   viewGallery.classList.remove('hidden');
@@ -106,7 +167,7 @@ function init() {
   form        = document.getElementById('add-form');        // Formulaire d’ajout
   title       = document.getElementById('title');           // Champ titre
   submitBtn   = form ? form.querySelector('.btn-primary') : null; // Bouton de soumission
-
+  gallery      = document.querySelector('#edit-bar #gallery');
   // Navigation modale : retour & fermeture
   document.addEventListener('click', (e) => {
     if (e.target.closest('.back-modal')) {
@@ -155,8 +216,21 @@ function init() {
     select.append(frag);
   }
 
-  // Soumission : upload via FormData (champs/flux inchangés)
+
+
+submitBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  form?.requestSubmit();
+});
+
+if (form) form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  console.log('SUBMIT OK');
+});
+
+
   if (form) form.addEventListener('submit', async (e) => {
+    console.log('SUBMIT TRIGGERED');
     e.preventDefault();
 
     // Vérifier les champs requis (message groupé)
@@ -196,20 +270,41 @@ function init() {
       const newWork = await res.json();
       alert('Téléversement réussi');
 
-      // Réinitialiser formulaire et UI
-      form.reset();
-      if (submitBtn) submitBtn.disabled = true;
-      if (preview) {
-        preview.removeAttribute('src');
-        preview.classList.add('hidden');
-      }
-      uploadarea?.classList?.remove?.('hidden');
 
-      // Mettre à jour le cache et rafraîchir la galerie si dispo
-      const works = JSON.parse(sessionStorage.getItem('works') || '[]');
-      works.push(newWork);
-      sessionStorage.setItem('works', JSON.stringify(works));
-      if (typeof renderGallery === 'function') renderGallery(works);
+// debug
+console.log('[SUCCESS] newWork =', newWork);
+console.log('[SUCCESS] renderGallery type =', typeof renderGallery);
+
+// 1)  UI
+form.reset();
+clearPreview();                 
+showGallery();                 
+
+// 2) （Work push）
+const works = JSON.parse(sessionStorage.getItem('works') || '[]');
+works.push(newWork);
+sessionStorage.setItem('works', JSON.stringify(works));
+console.log('[SUCCESS] works length now =', works.length);
+
+// 3) modal / page renderGallery 
+if (typeof renderGallery === 'function') {
+  renderGallery(works);
+   // -- Rendu initial de la galerie modale --
+  renderGalleryModale(works, gallery);
+  console.log('[SUCCESS] renderGallery called');
+} else {
+  console.warn('[SUCCESS] renderGallery is not defined');
+}
+
+
+if (submitBtn) submitBtn.disabled = false;
+
+
+
+
+
+      // Réinitialiser formulaire et UI
+     
 
     } catch (err) {
       console.error(err);

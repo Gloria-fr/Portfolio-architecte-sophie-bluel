@@ -13,7 +13,7 @@ let btnClose, btnAddDlg, btnModifier;
 
 // =================== 2) Fonctions (noms et logique conservés) ===================
 // Rendu d’une galerie dans un conteneur donné
-function renderGallery(list, container) {
+function renderGalleryModale(list, container) {
   if (!container || !Array.isArray(list)) return;
 
   const frag = document.createDocumentFragment();
@@ -79,7 +79,7 @@ function init() {
   btnAddDlg    = document.querySelector('.btn-ajouter');
 
   // -- Rendu initial de la galerie modale --
-  renderGallery(works, gallery);
+  renderGalleryModale(works, gallery);
 
   // -- Ouverture 
   if (btnModifier) {
