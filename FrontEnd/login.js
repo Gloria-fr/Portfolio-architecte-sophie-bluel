@@ -6,35 +6,43 @@ const storage = sessionStorage;              // ou sessionStorage si besoin
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // 1) Réinitialiser les messages de validation personnalisés précédents
-  email.setCustomValidity('');
-  pwd.setCustomValidity('');
-
-  // 2) Règles de validation côté client (à adapter si besoin)
+  // 1) Règles de validation côté client (à adapter si besoin)
   const emailVal = email.value.trim();
-  const pwdVal   = pwd.value;
+  email.value = emailVal; 
+  const pwdVal = pwd.value;
 
-  // E-mail : obligatoire + format
+   // 2) validation (sans bulles navigateur)
+  if(!emailVal&&!pwdVal){
+    showMsg("Veuillez entrer votre e-mail et votre mot de passe.");
+    email.focus();
+    return;
+    }
+
   if (!emailVal) {
-    email.setCustomValidity("L'e-mail est requis.");
-  } else if (email.type === 'email' && email.validity.typeMismatch) {
-    email.setCustomValidity("Format d'e-mail invalide.");
-  }
-
-  // Mot de passe : obligatoire + au moins 6 caractères
-  // (peut aussi être géré via l'attribut HTML minlength)
-  if (!pwdVal) {
-    pwd.setCustomValidity("Le mot de passe est requis.");
-  } else if (pwdVal.length < 6) {
-    pwd.setCustomValidity("Le mot de passe doit comporter au moins 6 caractères.");
-  }
-
-  // 3) Si un champ est invalide, empêcher l'envoi et afficher les messages
-  if (!form.checkValidity()) {
-    e.preventDefault();
-    form.reportValidity();
+    showMsg("L'e-mail est requis.");
+    email.focus();
     return;
   }
+
+  if (!email.checkValidity()) {
+    showMsg("Format d'e-mail invalide.");
+    email.focus();
+    return;
+  }
+
+  if (!pwdVal) {
+    showMsg("Le mot de passe est requis.");
+    pwd.focus();
+    return;
+  }
+
+  if (pwdVal.length < 6) {
+    showMsg("Le mot de passe doit comporter au moins 6 caractères.");
+    pwd.focus();
+    return;
+  }
+
+
 
   try {
     const res = await fetch(`http://localhost:5678/api/users/login`, {
