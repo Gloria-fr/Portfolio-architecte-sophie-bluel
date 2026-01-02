@@ -9,6 +9,7 @@ let categories = [];                                               // Liste des 
 //    2.1 Rendu de la galerie (DOM)
 //    2.2 Génération de la barre de filtres (DOM + cache)
 //    2.3 Listeners des filtres (DOM)
+//    2.4 Logout
 // ===================================================================
 
 // 2.1 Rendre la grille de travaux dans .gallery
@@ -91,6 +92,32 @@ function ajoutListenersFiltresCategory(works) {
   }
 }
 
+// 2.4 Gérer le lien login/logout en fonction du token
+function setupAuthLink() {
+  const link = document.getElementById('auth-link');
+  if (!link) return;
+
+  const token = sessionStorage.getItem('token');
+
+  if (token) {
+    // logout
+    link.textContent = 'logout';
+    link.href = '#';
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('userId');
+      sessionStorage.clear();
+
+      window.location.replace('index.html');
+    });
+  } else {
+    // login
+    link.textContent = 'login';
+    link.href = 'login.html';
+  }
+}
 
 // ===================================================================
 // 3) Démarrage (chargement des données + rendu initial)
@@ -126,5 +153,6 @@ async function init() {
 
 // Lancer une fois le DOM prêt (évite querySelector null)
 document.addEventListener('DOMContentLoaded', () => {
+  setupAuthLink();
   init().catch(err => console.error(err));                           // Démarrage + trace en cas d’erreur
 });
